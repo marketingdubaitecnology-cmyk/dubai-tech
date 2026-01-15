@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUBAI TECHNOLOGY | The Luxury Standard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root { --gold: #FFD700; --dark-blue: #0a0a0c; --card-bg: rgba(25, 25, 35, 0.75); }
+        body {
+            background: #0f172a;
+            background-image: radial-gradient(circle at 20% 30%, rgba(30, 58, 138, 0.4) 0%, transparent 40%), url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 10L0 40h60z" fill="%231e293b" fill-opacity="0.1"/%3E%3C/svg%3E');
+            background-attachment: fixed; color: #F5F5F5; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden;
+        }
+
+        /* EFECTOS VIP */
+        .glitch-text { position: relative; }
+        .glitch-text::before, .glitch-text::after { content: "Dubai"; position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8; }
+        .glitch-text::before { color: #0ff; z-index: -1; animation: glitch 3s infinite; }
+        .glitch-text::after { color: #f0f; z-index: -2; animation: glitch 3s infinite reverse; }
+        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+
+        .ticker-wrapper { width: 100%; overflow: hidden; background: rgba(255, 215, 0, 0.05); border-top: 1px solid rgba(255, 215, 0, 0.1); border-bottom: 1px solid rgba(255, 215, 0, 0.1); padding: 15px 0; margin-bottom: 30px; }
+        .ticker { display: flex; width: 200%; animation: scroll 30s linear infinite; }
+        .ticker div { width: 25%; color: var(--gold); font-weight: 900; letter-spacing: 5px; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        #sale-notification { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.9); border: 1px solid var(--gold); border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 10px; z-index: 5000; transform: translateX(-150%); transition: 0.5s ease; }
+        #sale-notification.show { transform: translateX(0); }
+
+        .luxury-card { background: var(--card-bg); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.5s ease; cursor: pointer; border-radius: 40px; }
+        .luxury-card:hover { border-color: var(--gold); transform: translateY(-10px); }
+        .gold-gradient-text { background: linear-gradient(to bottom, #FFF5B7 0%, #FFD700 50%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .review-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; padding: 10px; color: white; width: 100%; outline: none; font-size: 12px; }
+        #world-canvas { cursor: pointer; filter: drop-shadow(0 0 15px rgba(255,215,0,0.3)); }
+    </style>
+</head>
+<body>
+
+    <div id="sale-notification">
+        <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black text-xs"><i class="fas fa-shopping-bag"></i></div>
+        <div><p id="sale-text" class="text-[10px] text-white font-bold"></p></div>
+    </div>
+
+    <canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;"></canvas>
+
+    <div id="app" class="relative z-10">
+        <nav class="p-6 sticky top-0 z-[100] w-full bg-black/40 backdrop-blur-xl border-b border-white/5">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <h1 class="text-xl font-black text-white tracking-tighter uppercase">Dubai Technology</h1>
+                <button onclick="window.open('https://www.instagram.com/dubai_tecnology/', '_blank')" class="text-[9px] font-black uppercase border border-yellow-500/30 px-4 py-2 rounded-lg hover:bg-yellow-500 hover:text-black transition-all">Instagram VIP</button>
+            </div>
+        </nav>
+
+        <header class="pt-20 pb-10 text-center px-6">
+            <h2 class="mb-4 leading-tight">
+                <span class="block text-4xl md:text-6xl text-white font-black tracking-tighter uppercase mb-0 glitch-text">Dubai</span>
+                <span class="block text-6xl md:text-9xl gold-gradient-text py-4" style="font-family: 'Dancing Script', cursive;">Technology</span>
+            </h2>
+            <p class="text-gray-500 tracking-[0.8em] font-bold text-[10px] uppercase mb-12 italic">The Luxury Standard</p>
+
+            <div class="max-w-xl mx-auto mb-10 relative group">
+                <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 gold-gradient-text opacity-50"></i>
+                <input id="search" type="text" oninput="renderProducts()" placeholder="Buscar equipo VIP..." class="w-full bg-white/5 border border-white/10 rounded-full py-5 pl-16 pr-8 text-sm text-white focus:border-yellow-500 outline-none transition-all">
+            </div>
+
+            <div class="ticker-wrapper">
+                <div class="ticker">
+                    <div>SAMSUNG GALAXY PRO</div><div>MARSHALL SOUND</div><div>APPLE ELITE HUB</div><div>DUBAI TECHNOLOGY</div><div>SONY AUDIO</div><div>MACBOOK HUB</div><div>WATCH SERIES</div><div>SAMSUNG GALAXY PRO</div><div>MARSHALL SOUND</div><div>APPLE ELITE HUB</div><div>DUBAI TECHNOLOGY</div><div>SONY AUDIO</div><div>MACBOOK HUB</div><div>WATCH SERIES</div>
+                </div>
+            </div>
+        </header>
+
+        <main id="products-grid" class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 pb-20"></main>
+
+        <section class="max-w-7xl mx-auto px-6 mb-32">
+            <h3 class="text-center text-2xl font-black gold-gradient-text uppercase italic mb-12">Experiencias Elite</h3>
+            <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="luxury-card p-8 rounded-3xl border-white/5">
+                    <div class="flex text-yellow-500 mb-4 text-[10px]"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-white/80 text-xs italic mb-6">"La mejor atención en Caucasia. Mi iPhone llegó impecable."</p>
+                    <span class="text-[10px] font-black text-white/50 uppercase">Juan R. - Cliente VIP</span>
+                </div>
+            </div>
+            <div class="luxury-card p-8 rounded-3xl border-yellow-500/20 max-w-xl mx-auto text-center">
+                <input type="text" id="rev-name" placeholder="Tu Nombre VIP" class="review-input mb-4">
+                <textarea id="rev-text" placeholder="Tu Comentario..." class="review-input h-20 mb-4"></textarea>
+                <button onclick="postReview()" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-black uppercase text-[10px]">Publicar mi Reseña</button>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-6 mb-32 text-center">
+            <div class="luxury-card p-12 rounded-[50px] border-white/5 flex flex-col items-center">
+                <h3 class="text-3xl font-black uppercase mb-4 text-white italic">Dubai <span class="gold-gradient-text">Network</span></h3>
+                <div class="relative w-full max-w-[350px] aspect-square flex items-center justify-center bg-black/40 rounded-full border border-white/10 overflow-hidden" onclick="activateWorld()">
+                    <canvas id="world-canvas" width="400" height="400"></canvas>
+                    <div id="world-status" class="absolute bottom-10 text-yellow-500 text-[8px] font-black tracking-[0.3em] uppercase opacity-50">Sistema: Activo</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-6 mb-32">
+            <div class="luxury-card rounded-[50px] overflow-hidden grid md:grid-cols-2 border border-white/5">
+                <div class="p-12">
+                    <h3 class="text-3xl font-black uppercase mb-4 text-white italic">Visítanos</h3>
+                    <p class="text-gray-400">Cl. 21 #5-26, Caucasia, Antioquia</p>
+                </div>
+                <div class="h-[400px]">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3941.594738495048!2d-75.19665682410884!3d7.989182392036151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e5ba138e68449c3%3A0x644c1f9642c8d88e!2sCl.%2021%20%235-26%2C%20Caucasia%2C%20Antioquia!5e0!3m2!1ses-419!2sco!4v1705270000000!5m2!1ses-419!2sco" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const INITIAL_PRODUCTS = [
+            { id: 101, name: "Samsung Galaxy A06" },
+            { id: 102, name: "Samsung Galaxy A16 5G" },
+            { id: 103, name: "Samsung Galaxy A26 5G" },
+            { id: 104, name: "Samsung Galaxy A36 5G" },
+            { id: 105, name: "Samsung Galaxy A56 5G" }
+        ];
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            const query = document.getElementById('search').value.toLowerCase();
+            grid.innerHTML = '';
+            
+            INITIAL_PRODUCTS.filter(p => p.name.toLowerCase().includes(query)).forEach(p => {
+                grid.innerHTML += `
+                <div class="luxury-card p-8 flex flex-col text-center">
+                    <div class="w-full h-40 bg-white/5 rounded-2xl mb-6 flex items-center justify-center italic text-gray-600 text-[10px] uppercase tracking-widest">Imagen en Proceso VIP</div>
+                    <h3 class="font-black uppercase text-white mb-2 text-sm">${p.name}</h3>
+                    <span class="text-[9px] text-yellow-500 font-bold uppercase tracking-widest">Disponibilidad Inmediata</span>
+                    <button onclick="contactVIP('${p.name}')" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-[10px] mt-6 hover:scale-105 transition-all">Consultar Precio VIP</button>
+                </div>`;
+            });
+        }
+
+        function contactVIP(productName) {
+            const message = `Hola Dubai Technology! Me interesa conocer el precio y disponibilidad del ${productName}.`;
+            window.open(`https://wa.me/573218072979?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function startSaleNotifications() {
+            const users = ["Andrés", "Valentina", "Sebastián", "Carolina", "Mateo"];
+            setInterval(() => {
+                const notif = document.getElementById('sale-notification');
+                document.getElementById('sale-text').innerText = `${users[Math.floor(Math.random()*users.length)]} reservó un equipo VIP`;
+                notif.classList.add('show');
+                setTimeout(() => notif.classList.remove('show'), 4000);
+            }, 10000);
+        }
+
+        function postReview() {
+            const name = document.getElementById('rev-name').value, text = document.getElementById('rev-text').value;
+            if(!name || !text) return;
+            const reviews = JSON.parse(localStorage.getItem('dubai_reviews') || '[]');
+            reviews.unshift({ name, text }); localStorage.setItem('dubai_reviews', JSON.stringify(reviews));
+            location.reload();
+        }
+
+        function loadSavedReviews() {
+            const container = document.getElementById('reviews-container');
+            const reviews = JSON.parse(localStorage.getItem('dubai_reviews') || '[]');
+            reviews.forEach(r => { container.innerHTML += `<div class="luxury-card p-8 rounded-3xl border-white/5"><div class="flex text-yellow-500 mb-4 text-[10px]"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="text-white/80 text-xs italic mb-6">"${r.text}"</p><span class="text-[10px] font-black text-white/50 uppercase">${r.name} - Cliente VIP</span></div>`; });
+        }
+
+        function initParticles() {
+            const can = document.getElementById('particle-canvas'), c = can.getContext('2d');
+            can.width = window.innerWidth; can.height = window.innerHeight;
+            let dots = []; for(let i=0; i<30; i++) dots.push({ x: Math.random()*can.width, y: Math.random()*can.height, s: Math.random()*1.5, sp: Math.random()*0.15, o: Math.random()*0.3 });
+            function loop() { c.clearRect(0,0,can.width, can.height); dots.forEach(d => { d.y -= d.sp; if(d.y<0) d.y=can.height; c.fillStyle=`rgba(255,215,0,${d.o})`; c.beginPath(); c.arc(d.x, d.y, d.s, 0, Math.PI*2); c.fill(); }); requestAnimationFrame(loop); } loop();
+        }
+
+        const worldCanvas = document.getElementById('world-canvas');
+        const wCtx = worldCanvas.getContext('2d');
+        let worldParticles = [], isActivated = false;
+        class WorldParticle { constructor() { this.reset(); } reset() { this.x = Math.random() * 400; this.y = Math.random() * 400; this.vx = (Math.random() - 0.5) * 1; this.vy = (Math.random() - 0.5) * 1; } update() { this.x += this.vx * (isActivated ? 5 : 1); this.y += this.vy * (isActivated ? 5 : 1); if(this.x < 0 || this.x > 400) this.vx *= -1; if(this.y < 0 || this.y > 400) this.vy *= -1; } }
+        for(let i=0; i<40; i++) worldParticles.push(new WorldParticle());
+        function drawWorld() { wCtx.clearRect(0,0,400,400); worldParticles.forEach((p, i) => { p.update(); wCtx.fillStyle = isActivated ? '#FFD700' : 'rgba(255,215,0,0.3)'; wCtx.beginPath(); wCtx.arc(p.x, p.y, 2, 0, Math.PI*2); wCtx.fill(); worldParticles.forEach((p2, j) => { if(i === j) return; let dist = Math.hypot(p.x - p2.x, p.y - p2.y); if(dist < 80) { wCtx.strokeStyle = `rgba(255,215,0,${(1 - dist/80) * (isActivated ? 0.5 : 0.1)})`; wCtx.beginPath(); wCtx.moveTo(p.x, p.y); wCtx.lineTo(p2.x, p2.y); wCtx.stroke(); } }); }); requestAnimationFrame(drawWorld); }
+        function activateWorld() { isActivated = true; setTimeout(() => { isActivated = false; }, 3000); }
+
+        window.onload = () => { renderProducts(); startSaleNotifications(); loadSavedReviews(); initParticles(); drawWorld(); };
+    </script>
+</body>
+</html>
