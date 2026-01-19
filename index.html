@@ -37,6 +37,17 @@
         
         .review-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; padding: 10px; color: white; width: 100%; outline: none; font-size: 12px; }
         #world-canvas { cursor: pointer; filter: drop-shadow(0 0 15px rgba(255,215,0,0.3)); }
+        
+        /* ESTILOS CARRUSEL */
+        .carousel-container { position: relative; width: 100%; height: 250px; border-radius: 20px; overflow: hidden; margin-bottom: 15px; }
+        .carousel-slide { width: 100%; height: 100%; object-fit: contain; background: rgba(255,255,255,0.05); display: none; padding: 10px; }
+        .carousel-slide.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .carousel-dots { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; }
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: var(--gold); width: 12px; border-radius: 10px; }
+        
+        .specs-text { font-size: 10px; color: #a1a1aa; line-height: 1.6; text-align: left; margin-bottom: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -118,11 +129,54 @@
 
     <script>
         const INITIAL_PRODUCTS = [
-            { id: 101, name: "Samsung Galaxy A06" },
-            { id: 102, name: "Samsung Galaxy A16 5G" },
-            { id: 103, name: "Samsung Galaxy A26 5G" },
-            { id: 104, name: "Samsung Galaxy A36 5G" },
-            { id: 105, name: "Samsung Galaxy A56 5G" }
+            { 
+                id: 102, 
+                name: "Samsung Galaxy A16 5G", 
+                images: [
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a165fzadmea/gallery/levant-galaxy-a16-sm-a165-sm-a165fzadmea-544133446",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a165fzadmea/gallery/levant-galaxy-a16-sm-a165-sm-a165fzadmea-544133454",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a165fzadmea/gallery/levant-galaxy-a16-sm-a165-sm-a165fzadmea-544133451",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a165fzadmea/gallery/levant-galaxy-a16-sm-a165-sm-a165fzadmea-544133452",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a165fzadmea/gallery/levant-galaxy-a16-sm-a165-sm-a165fzadmea-544133455"
+                ],
+                desc: "Experimenta la velocidad del futuro con el Galaxy A16 5G. Equipado con una impresionante pantalla de 6.7 pulgadas FHD+ Super AMOLED que ofrece colores vibrantes y negros profundos. Su sistema de triple cámara de 50 MP captura cada detalle con claridad profesional. Batería de larga duración de 5000 mAh con carga rápida para mantenerte conectado todo el día en Caucasia. Diseño elegante y minimalista."
+            },
+            { 
+                id: 103, 
+                name: "Samsung Galaxy A26 5G", 
+                images: [
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a266bziimea/gallery/levant-galaxy-a26-5g-sm-a266-sm-a266bziimea-544521363",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a266bziimea/gallery/levant-galaxy-a26-5g-sm-a266-sm-a266bziimea-544521371",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a266bziimea/gallery/levant-galaxy-a26-5g-sm-a266-sm-a266bziimea-544521369",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a266bziimea/gallery/levant-galaxy-a26-5g-sm-a266-sm-a266bziimea-544521370",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a266bziimea/gallery/levant-galaxy-a26-5g-sm-a266-sm-a266bziimea-544521372"
+                ],
+                desc: "El equilibrio perfecto entre potencia y estilo. El Galaxy A26 cuenta con un procesador optimizado para juegos y multitarea fluida. Su pantalla Infinity-O ofrece una experiencia inmersiva sin interrupciones. Disfruta de fotos nocturnas increíbles gracias a su modo Nightography mejorado. Seguridad de grado militar con Samsung Knox y desbloqueo por huella lateral. Ideal para el usuario exigente."
+            },
+            { 
+                id: 104, 
+                name: "Samsung Galaxy A36 5G", 
+                images: [
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a366blgvmea/gallery/levant-galaxy-a36-5g-sm-a366-sm-a366blgvmea-544521406",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a366blgvmea/gallery/levant-galaxy-a36-5g-sm-a366-sm-a366blgvmea-544521415",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a366blgvmea/gallery/levant-galaxy-a36-5g-sm-a366-sm-a366blgvmea-544521412",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a366blgvmea/gallery/levant-galaxy-a36-5g-sm-a366-sm-a366blgvmea-544521413",
+                    "https://images.samsung.com/is/image/samsung/p6pim/levant/sm-a366blgvmea/gallery/levant-galaxy-a36-5g-sm-a366-sm-a366blgvmea-544521416"
+                ],
+                desc: "Innovación en su máxima expresión. El Galaxy A36 redefine la gama media con su acabado premium en cristal y resistencia al agua y polvo IP67. Pantalla de 120Hz para una fluidez extrema en redes sociales y videos. Altavoces estéreo con Dolby Atmos que te envuelven en sonido. Cámara con estabilización óptica (OIS) para videos super estables mientras caminas por Caucasia. Una joya tecnológica."
+            },
+            { 
+                id: 105, 
+                name: "Samsung Galaxy A56 5G", 
+                images: [
+                    "https://images.samsung.com/is/image/samsung/p6pim/ph/sm-a566bzatphl/gallery/ph-galaxy-a56-5g-sm-a566-sm-a566bzatphl-544503761",
+                    "https://images.samsung.com/is/image/samsung/p6pim/ph/sm-a566bzatphl/gallery/ph-galaxy-a56-5g-sm-a566-sm-a566bzatphl-544503769",
+                    "https://images.samsung.com/is/image/samsung/p6pim/ph/sm-a566bzatphl/gallery/ph-galaxy-a56-5g-sm-a566-sm-a566bzatphl-544503767",
+                    "https://images.samsung.com/is/image/samsung/p6pim/ph/sm-a566bzatphl/gallery/ph-galaxy-a56-5g-sm-a566-sm-a566bzatphl-544503768",
+                    "https://images.samsung.com/is/image/samsung/p6pim/ph/sm-a566bzatphl/gallery/ph-galaxy-a56-5g-sm-a566-sm-a566bzatphl-544503770"
+                ],
+                desc: "El rey de la serie A. Construcción en metal y vidrio Gorilla Glass Victus para máxima durabilidad. Potenciado por el procesador más avanzado de su clase para correr cualquier aplicación pesada. Carga ultra rápida de 45W. Sistema de cámaras profesional con IA integrada para mejorar cada foto automáticamente. Pantalla ultra brillante visible incluso bajo el sol fuerte del mediodía. Lo mejor de lo mejor en Dubai Technology."
+            }
         ];
 
         function renderProducts() {
@@ -131,14 +185,61 @@
             grid.innerHTML = '';
             
             INITIAL_PRODUCTS.filter(p => p.name.toLowerCase().includes(query)).forEach(p => {
+                let imagesHtml = '';
+                p.images.forEach((img, index) => {
+                    imagesHtml += `<img src="${img}" class="carousel-slide ${index === 0 ? 'active' : ''}" id="img-${p.id}-${index}" onclick="nextImage(${p.id}, ${p.images.length})">`;
+                });
+
+                let dotsHtml = '';
+                p.images.forEach((_, index) => {
+                    dotsHtml += `<div class="dot ${index === 0 ? 'active' : ''}" id="dot-${p.id}-${index}" onclick="setImage(${p.id}, ${index})"></div>`;
+                });
+
                 grid.innerHTML += `
-                <div class="luxury-card p-8 flex flex-col text-center">
-                    <div class="w-full h-40 bg-white/5 rounded-2xl mb-6 flex items-center justify-center italic text-gray-600 text-[10px] uppercase tracking-widest">Imagen en Proceso VIP</div>
-                    <h3 class="font-black uppercase text-white mb-2 text-sm">${p.name}</h3>
-                    <span class="text-[9px] text-yellow-500 font-bold uppercase tracking-widest">Disponibilidad Inmediata</span>
-                    <button onclick="contactVIP('${p.name}')" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-[10px] mt-6 hover:scale-105 transition-all">Consultar Precio VIP</button>
+                <div class="luxury-card p-8 flex flex-col text-left">
+                    <div class="carousel-container">
+                        ${imagesHtml}
+                    </div>
+                    <div class="carousel-dots">
+                        ${dotsHtml}
+                    </div>
+                    <h3 class="font-black uppercase text-white mb-2 text-xl text-center">${p.name}</h3>
+                    <div class="specs-text">
+                        <p class="mb-2 text-justify">${p.desc}</p>
+                    </div>
+                    <span class="text-[9px] text-yellow-500 font-bold uppercase tracking-widest text-center mb-4 block">Disponibilidad Inmediata</span>
+                    <button onclick="contactVIP('${p.name}')" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-[10px] hover:scale-105 transition-all shadow-lg shadow-yellow-500/20">
+                        <i class="fab fa-whatsapp mr-2 text-lg"></i> Consultar Precio
+                    </button>
                 </div>`;
             });
+        }
+
+        // Función para cambiar imagen automáticamente al hacer click
+        let currentIndices = {};
+        function nextImage(productId, totalImages) {
+            if (!currentIndices[productId]) currentIndices[productId] = 0;
+            currentIndices[productId] = (currentIndices[productId] + 1) % totalImages;
+            updateCarousel(productId, currentIndices[productId]);
+        }
+
+        // Función para cambiar imagen con los puntos
+        function setImage(productId, index) {
+            currentIndices[productId] = index;
+            updateCarousel(productId, index);
+        }
+
+        function updateCarousel(productId, index) {
+            // Ocultar todas las imagenes de este producto
+            const slides = document.querySelectorAll(`[id^="img-${productId}-"]`);
+            slides.forEach(slide => slide.classList.remove('active'));
+            // Mostrar la seleccionada
+            document.getElementById(`img-${productId}-${index}`).classList.add('active');
+            
+            // Actualizar puntos
+            const dots = document.querySelectorAll(`[id^="dot-${productId}-"]`);
+            dots.forEach(dot => dot.classList.remove('active'));
+            document.getElementById(`dot-${productId}-${index}`).classList.add('active');
         }
 
         function contactVIP(productName) {
