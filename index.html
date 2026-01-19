@@ -47,7 +47,6 @@
         .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; transition: 0.3s; }
         .dot.active { background: var(--gold); width: 12px; border-radius: 10px; }
         
-        /* Placeholder para cuando no hay imagen */
         .no-image-box { 
             width: 100%; height: 100%; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; 
@@ -55,7 +54,45 @@
             border: 1px dashed rgba(255, 215, 0, 0.2);
         }
         
-        .specs-text { font-size: 11px; color: #a1a1aa; line-height: 1.6; text-align: justify; margin-bottom: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        /* TEXTO LIMITADO PARA TARJETA */
+        .specs-text-card { 
+            font-size: 11px; color: #a1a1aa; line-height: 1.6; text-align: justify; 
+            margin-bottom: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* --- NUEVOS ESTILOS PARA EL MODAL --- */
+        .modal-overlay {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #121214 0%, #050505 100%);
+            border: 1px solid var(--gold);
+            width: 100%; max-width: 600px;
+            border-radius: 30px;
+            position: relative;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.15);
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes modalPop { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        .close-modal {
+            position: absolute; top: 20px; right: 25px;
+            color: var(--gold); font-size: 28px; cursor: pointer;
+            transition: 0.3s; z-index: 10;
+        }
+        .close-modal:hover { transform: rotate(90deg) scale(1.2); }
     </style>
 </head>
 <body>
@@ -135,6 +172,26 @@
         </section>
     </div>
 
+    <div id="product-modal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal(event)">&times;</span>
+            
+            <div class="text-center mb-6">
+                 <h2 id="modal-title" class="text-3xl font-black text-white uppercase tracking-tight mb-2"></h2>
+                 <div class="w-20 h-1 bg-yellow-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div id="modal-body" class="text-gray-300 text-sm mb-8 text-justify leading-relaxed tracking-wide font-light"></div>
+
+            <div class="border-t border-white/10 pt-6">
+                <p class="text-center text-[10px] text-gray-500 uppercase tracking-widest mb-4">Disponible en tienda Caucasia</p>
+                <button id="modal-action-btn" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-sm hover:scale-105 transition-all shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2">
+                    <i class="fab fa-whatsapp text-lg"></i> Lo quiero comprar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const INITIAL_PRODUCTS = [
             { 
@@ -171,7 +228,6 @@
             INITIAL_PRODUCTS.filter(p => p.name.toLowerCase().includes(query)).forEach(p => {
                 let imagesContent = '';
                 
-                // LÓGICA: Si no hay imágenes, muestra el placeholder elegante
                 if (p.images.length > 0) {
                     let imagesHtml = '';
                     p.images.forEach((img, index) => {
@@ -191,7 +247,6 @@
                         </div>
                     `;
                 } else {
-                    // DISEÑO DEL CUADRO SIN FOTO
                     imagesContent = `
                         <div class="carousel-container">
                             <div class="no-image-box">
@@ -207,18 +262,42 @@
                 <div class="luxury-card p-8 flex flex-col text-left">
                     ${imagesContent}
                     <h3 class="font-black uppercase text-white mb-2 text-xl text-center tracking-tighter">${p.name}</h3>
-                    <div class="specs-text">
+                    <div class="specs-text-card">
                         <p>${p.desc}</p>
                     </div>
                     <span class="text-[9px] text-yellow-500 font-bold uppercase tracking-widest text-center mb-4 block animate-pulse">Disponibilidad Inmediata</span>
-                    <button onclick="contactVIP('${p.name}')" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-[10px] hover:scale-105 transition-all shadow-lg shadow-yellow-500/20">
-                        <i class="fab fa-whatsapp mr-2 text-lg"></i> Solicitar Fotos y Precio
+                    
+                    <button onclick="openDetails(${p.id})" class="w-full bg-transparent border border-yellow-500 text-yellow-500 py-4 rounded-2xl font-black uppercase text-[10px] hover:bg-yellow-500 hover:text-black transition-all shadow-lg shadow-yellow-500/10">
+                        <i class="fas fa-plus mr-2"></i> Ver Información
                     </button>
                 </div>`;
             });
         }
 
-        // Función para cambiar imagen automáticamente al hacer click
+        /* --- NUEVAS FUNCIONES PARA EL MODAL --- */
+        function openDetails(productId) {
+            const product = INITIAL_PRODUCTS.find(p => p.id === productId);
+            if (!product) return;
+
+            // Rellenar datos
+            document.getElementById('modal-title').innerText = product.name;
+            document.getElementById('modal-body').innerText = product.desc;
+            
+            // Configurar botón del modal
+            const btn = document.getElementById('modal-action-btn');
+            btn.onclick = function() { contactVIP(product.name); };
+            
+            // Mostrar modal
+            document.getElementById('product-modal').style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            // Si viene del botón X o del overlay
+            document.getElementById('product-modal').style.display = 'none';
+        }
+
+        // --- MANTENIENDO EL RESTO DE TUS FUNCIONES --- //
+
         let currentIndices = {};
         function nextImage(productId, totalImages) {
             if (!currentIndices[productId]) currentIndices[productId] = 0;
@@ -226,7 +305,6 @@
             updateCarousel(productId, currentIndices[productId]);
         }
 
-        // Función para cambiar imagen con los puntos
         function setImage(productId, index) {
             currentIndices[productId] = index;
             updateCarousel(productId, index);
