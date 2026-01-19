@@ -38,8 +38,8 @@
         .review-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; padding: 10px; color: white; width: 100%; outline: none; font-size: 12px; }
         #world-canvas { cursor: pointer; filter: drop-shadow(0 0 15px rgba(255,215,0,0.3)); }
         
-        /* ESTILOS CARRUSEL */
-        .carousel-container { position: relative; width: 100%; height: 250px; border-radius: 20px; overflow: hidden; margin-bottom: 15px; }
+        /* ESTILOS CARRUSEL & PLACEHOLDER */
+        .carousel-container { position: relative; width: 100%; height: 280px; border-radius: 20px; overflow: hidden; margin-bottom: 20px; background: rgba(0,0,0,0.2); }
         .carousel-slide { width: 100%; height: 100%; object-fit: contain; background: rgba(255,255,255,0.05); display: none; padding: 10px; }
         .carousel-slide.active { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -47,14 +47,15 @@
         .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; transition: 0.3s; }
         .dot.active { background: var(--gold); width: 12px; border-radius: 10px; }
         
-        .specs-text { font-size: 10px; color: #a1a1aa; line-height: 1.6; text-align: left; margin-bottom: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
-        
-        /* ESTILO PARA SIN IMAGEN */
-        .no-image-placeholder {
+        /* Placeholder para cuando no hay imagen */
+        .no-image-box { 
             width: 100%; height: 100%; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; 
-            background: rgba(255,255,255,0.03); color: #555; text-align: center;
+            background: linear-gradient(45deg, rgba(255,255,255,0.02) 0%, rgba(255,215,0,0.05) 100%);
+            border: 1px dashed rgba(255, 215, 0, 0.2);
         }
+        
+        .specs-text { font-size: 11px; color: #a1a1aa; line-height: 1.6; text-align: justify; margin-bottom: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
     </style>
 </head>
 <body>
@@ -139,25 +140,25 @@
             { 
                 id: 102, 
                 name: "Samsung Galaxy A16 5G", 
-                images: [],
+                images: [], 
                 desc: "Experimenta la velocidad del futuro con el Galaxy A16 5G. Equipado con una impresionante pantalla de 6.7 pulgadas FHD+ Super AMOLED que ofrece colores vibrantes y negros profundos. Su sistema de triple cámara de 50 MP captura cada detalle con claridad profesional. Batería de larga duración de 5000 mAh con carga rápida para mantenerte conectado todo el día en Caucasia. Diseño elegante y minimalista."
             },
             { 
                 id: 103, 
                 name: "Samsung Galaxy A26 5G", 
-                images: [],
+                images: [], 
                 desc: "El equilibrio perfecto entre potencia y estilo. El Galaxy A26 cuenta con un procesador optimizado para juegos y multitarea fluida. Su pantalla Infinity-O ofrece una experiencia inmersiva sin interrupciones. Disfruta de fotos nocturnas increíbles gracias a su modo Nightography mejorado. Seguridad de grado militar con Samsung Knox y desbloqueo por huella lateral. Ideal para el usuario exigente."
             },
             { 
                 id: 104, 
                 name: "Samsung Galaxy A36 5G", 
-                images: [],
+                images: [], 
                 desc: "Innovación en su máxima expresión. El Galaxy A36 redefine la gama media con su acabado premium en cristal y resistencia al agua y polvo IP67. Pantalla de 120Hz para una fluidez extrema en redes sociales y videos. Altavoces estéreo con Dolby Atmos que te envuelven en sonido. Cámara con estabilización óptica (OIS) para videos super estables mientras caminas por Caucasia. Una joya tecnológica."
             },
             { 
                 id: 105, 
                 name: "Samsung Galaxy A56 5G", 
-                images: [],
+                images: [], 
                 desc: "El rey de la serie A. Construcción en metal y vidrio Gorilla Glass Victus para máxima durabilidad. Potenciado por el procesador más avanzado de su clase para correr cualquier aplicación pesada. Carga ultra rápida de 45W. Sistema de cámaras profesional con IA integrada para mejorar cada foto automáticamente. Pantalla ultra brillante visible incluso bajo el sol fuerte del mediodía. Lo mejor de lo mejor en Dubai Technology."
             }
         ];
@@ -170,6 +171,7 @@
             INITIAL_PRODUCTS.filter(p => p.name.toLowerCase().includes(query)).forEach(p => {
                 let imagesContent = '';
                 
+                // LÓGICA: Si no hay imágenes, muestra el placeholder elegante
                 if (p.images.length > 0) {
                     let imagesHtml = '';
                     p.images.forEach((img, index) => {
@@ -189,12 +191,13 @@
                         </div>
                     `;
                 } else {
-                    // SI NO HAY IMAGENES, MUESTRA ESTO
+                    // DISEÑO DEL CUADRO SIN FOTO
                     imagesContent = `
                         <div class="carousel-container">
-                            <div class="no-image-placeholder">
-                                <i class="fas fa-camera text-4xl text-gray-600 mb-2"></i>
-                                <span class="text-[9px] uppercase tracking-widest text-gray-500 font-bold">Fotos Disponibles<br>al Privado</span>
+                            <div class="no-image-box">
+                                <i class="fas fa-camera text-4xl text-yellow-500 mb-3 opacity-80"></i>
+                                <span class="text-[9px] uppercase tracking-widest text-white/50 font-bold">Imágenes Reales</span>
+                                <span class="text-[8px] uppercase tracking-widest text-yellow-500 font-bold mt-1">Disponibles en WhatsApp</span>
                             </div>
                         </div>
                     `;
@@ -203,13 +206,13 @@
                 grid.innerHTML += `
                 <div class="luxury-card p-8 flex flex-col text-left">
                     ${imagesContent}
-                    <h3 class="font-black uppercase text-white mb-2 text-xl text-center">${p.name}</h3>
+                    <h3 class="font-black uppercase text-white mb-2 text-xl text-center tracking-tighter">${p.name}</h3>
                     <div class="specs-text">
-                        <p class="mb-2 text-justify">${p.desc}</p>
+                        <p>${p.desc}</p>
                     </div>
-                    <span class="text-[9px] text-yellow-500 font-bold uppercase tracking-widest text-center mb-4 block">Disponibilidad Inmediata</span>
+                    <span class="text-[9px] text-yellow-500 font-bold uppercase tracking-widest text-center mb-4 block animate-pulse">Disponibilidad Inmediata</span>
                     <button onclick="contactVIP('${p.name}')" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-[10px] hover:scale-105 transition-all shadow-lg shadow-yellow-500/20">
-                        <i class="fab fa-whatsapp mr-2 text-lg"></i> Consultar Precio
+                        <i class="fab fa-whatsapp mr-2 text-lg"></i> Solicitar Fotos y Precio
                     </button>
                 </div>`;
             });
@@ -230,13 +233,10 @@
         }
 
         function updateCarousel(productId, index) {
-            // Ocultar todas las imagenes de este producto
             const slides = document.querySelectorAll(`[id^="img-${productId}-"]`);
             slides.forEach(slide => slide.classList.remove('active'));
-            // Mostrar la seleccionada
             document.getElementById(`img-${productId}-${index}`).classList.add('active');
             
-            // Actualizar puntos
             const dots = document.querySelectorAll(`[id^="dot-${productId}-"]`);
             if(dots.length > 0) {
                 dots.forEach(dot => dot.classList.remove('active'));
@@ -245,7 +245,7 @@
         }
 
         function contactVIP(productName) {
-            const message = `Hola Dubai Technology! Me interesa conocer el precio y disponibilidad del ${productName}.`;
+            const message = `Hola Dubai Technology! Me gustaría ver fotos reales del ${productName} y conocer su precio.`;
             window.open(`https://wa.me/573218072979?text=${encodeURIComponent(message)}`, '_blank');
         }
 
