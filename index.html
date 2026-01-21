@@ -61,9 +61,9 @@
             display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
         }
 
-        /* --- NUEVOS ESTILOS PARA EL MODAL --- */
+        /* --- ESTILOS PARA EL MODAL --- */
         .modal-overlay {
-            display: none; /* Oculto por defecto */
+            display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
@@ -174,7 +174,7 @@
 
     <div id="product-modal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeModal(event)">&times;</span>
+            <span class="close-modal" onclick="closeModal(event)">×</span>
             
             <div class="text-center mb-6">
                  <h2 id="modal-title" class="text-3xl font-black text-white uppercase tracking-tight mb-2"></h2>
@@ -197,7 +197,7 @@
             { 
                 id: 102, 
                 name: "Samsung Galaxy A16", 
-                images: [], 
+                images: ["A16-5G-1.jpg", "650_1200 (3).jpeg", "6TC3NVTKMRFVVMAELJWUOMQZPI.avif"], 
                 desc: "Experimenta la velocidad del futuro con el Galaxy A16 5G. Equipado con una impresionante pantalla de 6.7 pulgadas FHD+ Super AMOLED que ofrece colores vibrantes y negros profundos. Su sistema de triple cámara de 50 MP captura cada detalle con claridad profesional. Batería de larga duración de 5000 mAh con carga rápida para mantenerte conectado todo el día en Caucasia. Diseño elegante y minimalista."
             },
             { 
@@ -274,29 +274,19 @@
             });
         }
 
-        /* --- NUEVAS FUNCIONES PARA EL MODAL --- */
         function openDetails(productId) {
             const product = INITIAL_PRODUCTS.find(p => p.id === productId);
             if (!product) return;
-
-            // Rellenar datos
             document.getElementById('modal-title').innerText = product.name;
             document.getElementById('modal-body').innerText = product.desc;
-            
-            // Configurar botón del modal
             const btn = document.getElementById('modal-action-btn');
             btn.onclick = function() { contactVIP(product.name); };
-            
-            // Mostrar modal
             document.getElementById('product-modal').style.display = 'flex';
         }
 
         function closeModal(event) {
-            // Si viene del botón X o del overlay
             document.getElementById('product-modal').style.display = 'none';
         }
-
-        // --- MANTENIENDO EL RESTO DE TUS FUNCIONES --- //
 
         let currentIndices = {};
         function nextImage(productId, totalImages) {
@@ -314,7 +304,6 @@
             const slides = document.querySelectorAll(`[id^="img-${productId}-"]`);
             slides.forEach(slide => slide.classList.remove('active'));
             document.getElementById(`img-${productId}-${index}`).classList.add('active');
-            
             const dots = document.querySelectorAll(`[id^="dot-${productId}-"]`);
             if(dots.length > 0) {
                 dots.forEach(dot => dot.classList.remove('active'));
@@ -370,4 +359,3 @@
     </script>
 </body>
 </html>
-
