@@ -5,208 +5,357 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DUBAI TECHNOLOGY | The Luxury Standard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        :root { --gold: #FFD700; --card-bg: rgba(25, 25, 35, 0.75); }
+        :root { --gold: #FFD700; --dark-blue: #0a0a0c; --card-bg: rgba(25, 25, 35, 0.75); }
         body {
             background: #0f172a;
-            background-image: radial-gradient(circle at 20% 30%, rgba(30, 58, 138, 0.4) 0%, transparent 40%);
-            background-attachment: fixed; color: #F5F5F5; font-family: 'Montserrat', sans-serif;
+            background-image: radial-gradient(circle at 20% 30%, rgba(30, 58, 138, 0.4) 0%, transparent 40%), url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 10L0 40h60z" fill="%231e293b" fill-opacity="0.1"/%3E%3C/svg%3E');
+            background-attachment: fixed; color: #F5F5F5; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden;
         }
 
-        /* ESTILO MODAL PROFESIONAL (APPLE/SAMSUNG STYLE) */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
-            z-index: 10000; justify-content: center; align-items: center; padding: 20px;
-        }
-        .modal-content {
-            background: linear-gradient(145deg, #1a1a1e 0%, #0a0a0c 100%);
-            border: 1px solid rgba(255, 215, 0, 0.3); width: 100%; max-width: 800px;
-            border-radius: 40px; position: relative; padding: 40px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            animation: modalSlideUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        @keyframes modalSlideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .close-modal { position: absolute; top: 25px; right: 30px; color: var(--gold); font-size: 30px; cursor: pointer; transition: 0.3s; }
-        .close-modal:hover { transform: scale(1.2); }
+        /* EFECTOS VIP */
+        .glitch-text { position: relative; }
+        .glitch-text::before, .glitch-text::after { content: "Dubai"; position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8; }
+        .glitch-text::before { color: #0ff; z-index: -1; animation: glitch 3s infinite; }
+        .glitch-text::after { color: #f0f; z-index: -2; animation: glitch 3s infinite reverse; }
+        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
 
-        /* TARJETAS VIP */
-        .luxury-card { 
-            background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); 
-            transition: 0.5s; cursor: pointer; border-radius: 35px; overflow: hidden;
-        }
-        .luxury-card:hover { border-color: var(--gold); transform: scale(1.02); }
+        .ticker-wrapper { width: 100%; overflow: hidden; background: rgba(255, 215, 0, 0.05); border-top: 1px solid rgba(255, 215, 0, 0.1); border-bottom: 1px solid rgba(255, 215, 0, 0.1); padding: 15px 0; margin-bottom: 30px; }
+        .ticker { display: flex; width: 200%; animation: scroll 30s linear infinite; }
+        .ticker div { width: 25%; color: var(--gold); font-weight: 900; letter-spacing: 5px; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        #sale-notification { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.9); border: 1px solid var(--gold); border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 10px; z-index: 5000; transform: translateX(-150%); transition: 0.5s ease; }
+        #sale-notification.show { transform: translateX(0); }
+
+        .luxury-card { background: var(--card-bg); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.5s ease; cursor: pointer; border-radius: 40px; }
+        .luxury-card:hover { border-color: var(--gold); transform: translateY(-10px); }
+        .gold-gradient-text { background: linear-gradient(to bottom, #FFF5B7 0%, #FFD700 50%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .carousel-container { width: 100%; height: 250px; overflow: hidden; position: relative; }
-        .carousel-slide { width: 100%; height: 100%; object-fit: contain; display: none; padding: 15px; }
+        .review-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; padding: 10px; color: white; width: 100%; outline: none; font-size: 12px; }
+        #world-canvas { cursor: pointer; filter: drop-shadow(0 0 15px rgba(255,215,0,0.3)); }
+        
+        /* ESTILOS CARRUSEL & PLACEHOLDER */
+        .carousel-container { position: relative; width: 100%; height: 280px; border-radius: 20px; overflow: hidden; margin-bottom: 20px; background: rgba(0,0,0,0.2); }
+        .carousel-slide { width: 100%; height: 100%; object-fit: contain; background: rgba(255,255,255,0.05); display: none; padding: 10px; }
         .carousel-slide.active { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .gold-gradient-text { background: linear-gradient(to bottom, #FFF5B7 0%, #FFD700 50%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* ESTILOS DEL CARRITO */
-        #cart-sidebar {
-            position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
-            background: #0a0a0c; border-left: 1px solid var(--gold); z-index: 11000;
-            transition: 0.5s cubic-bezier(0.77,0,0.175,1); padding: 40px 30px;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        .carousel-dots { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; }
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: var(--gold); width: 12px; border-radius: 10px; }
+        
+        .no-image-box { 
+            width: 100%; height: 100%; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; 
+            background: linear-gradient(45deg, rgba(255,255,255,0.02) 0%, rgba(255,215,0,0.05) 100%);
+            border: 1px dashed rgba(255, 215, 0, 0.2);
         }
-        #cart-sidebar.open { right: 0; }
-        .cart-item { border-bottom: 1px solid rgba(255,215,0,0.1); padding: 15px 0; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* TEXTO LIMITADO PARA TARJETA */
+        .specs-text-card { 
+            font-size: 11px; color: #a1a1aa; line-height: 1.6; text-align: justify; 
+            margin-bottom: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* --- ESTILOS PARA EL MODAL --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #121214 0%, #050505 100%);
+            border: 1px solid var(--gold);
+            width: 100%; max-width: 600px;
+            border-radius: 30px;
+            position: relative;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.15);
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes modalPop { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        .close-modal {
+            position: absolute; top: 20px; right: 25px;
+            color: var(--gold); font-size: 28px; cursor: pointer;
+            transition: 0.3s; z-index: 10;
+        }
+        .close-modal:hover { transform: rotate(90deg) scale(1.2); }
     </style>
 </head>
 <body>
 
-    <div onclick="toggleCart()" class="fixed top-6 right-6 z-[9999] bg-yellow-500 text-black px-5 py-3 rounded-full font-black cursor-pointer shadow-xl shadow-yellow-500/20 hover:scale-110 transition-all flex items-center gap-3">
-        <i class="fas fa-shopping-cart"></i>
-        <span id="cart-count">0</span>
+    <div id="sale-notification">
+        <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black text-xs"><i class="fas fa-shopping-bag"></i></div>
+        <div><p id="sale-text" class="text-[10px] text-white font-bold"></p></div>
     </div>
 
-    <div id="cart-sidebar">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-2xl font-black gold-gradient-text uppercase italic">Tu Carrito</h2>
-            <i onclick="toggleCart()" class="fas fa-times text-yellow-500 cursor-pointer text-xl"></i>
-        </div>
-        <div id="cart-items-container" class="space-y-4 max-h-[60vh] overflow-y-auto mb-10">
-            <p id="empty-cart-msg" class="text-gray-500 text-center italic text-sm">El carrito está vacío</p>
-        </div>
-        <div class="border-t border-white/10 pt-6">
-            <button onclick="checkoutWhatsApp()" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-xs shadow-lg shadow-yellow-500/10">
-                Pedir por WhatsApp <i class="fab fa-whatsapp ml-2"></i>
-            </button>
-        </div>
+    <canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;"></canvas>
+
+    <div id="app" class="relative z-10">
+        <nav class="p-6 sticky top-0 z-[100] w-full bg-black/40 backdrop-blur-xl border-b border-white/5">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <h1 class="text-xl font-black text-white tracking-tighter uppercase">Dubai Technology</h1>
+                <button onclick="window.open('https://www.instagram.com/dubai_tecnology/', '_blank')" class="text-[9px] font-black uppercase border border-yellow-500/30 px-4 py-2 rounded-lg hover:bg-yellow-500 hover:text-black transition-all">Instagram VIP</button>
+            </div>
+        </nav>
+
+        <header class="pt-20 pb-10 text-center px-6">
+            <h2 class="mb-4 leading-tight">
+                <span class="block text-4xl md:text-6xl text-white font-black tracking-tighter uppercase mb-0 glitch-text">Dubai</span>
+                <span class="block text-6xl md:text-9xl gold-gradient-text py-4" style="font-family: 'Dancing Script', cursive;">Technology</span>
+            </h2>
+            <p class="text-gray-500 tracking-[0.8em] font-bold text-[10px] uppercase mb-12 italic">The Luxury Standard</p>
+
+            <div class="max-w-xl mx-auto mb-10 relative group">
+                <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 gold-gradient-text opacity-50"></i>
+                <input id="search" type="text" oninput="renderProducts()" placeholder="Buscar equipo VIP..." class="w-full bg-white/5 border border-white/10 rounded-full py-5 pl-16 pr-8 text-sm text-white focus:border-yellow-500 outline-none transition-all">
+            </div>
+
+            <div class="ticker-wrapper">
+                <div class="ticker">
+                    <div>SAMSUNG GALAXY PRO</div><div>MARSHALL SOUND</div><div>APPLE ELITE HUB</div><div>DUBAI TECHNOLOGY</div><div>SONY AUDIO</div><div>MACBOOK HUB</div><div>WATCH SERIES</div><div>SAMSUNG GALAXY PRO</div><div>MARSHALL SOUND</div><div>APPLE ELITE HUB</div><div>DUBAI TECHNOLOGY</div><div>SONY AUDIO</div><div>MACBOOK HUB</div><div>WATCH SERIES</div>
+                </div>
+            </div>
+        </header>
+
+        <main id="products-grid" class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 pb-20"></main>
+
+        <section class="max-w-7xl mx-auto px-6 mb-32">
+            <h3 class="text-center text-2xl font-black gold-gradient-text uppercase italic mb-12">Experiencias Elite</h3>
+            <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="luxury-card p-8 rounded-3xl border-white/5">
+                    <div class="flex text-yellow-500 mb-4 text-[10px]"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-white/80 text-xs italic mb-6">"La mejor atención en Caucasia. Mi iPhone llegó impecable."</p>
+                    <span class="text-[10px] font-black text-white/50 uppercase">Juan R. - Cliente VIP</span>
+                </div>
+            </div>
+            <div class="luxury-card p-8 rounded-3xl border-yellow-500/20 max-w-xl mx-auto text-center">
+                <input type="text" id="rev-name" placeholder="Tu Nombre VIP" class="review-input mb-4">
+                <textarea id="rev-text" placeholder="Tu Comentario..." class="review-input h-20 mb-4"></textarea>
+                <button onclick="postReview()" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-black uppercase text-[10px]">Publicar mi Reseña</button>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-6 mb-32 text-center">
+            <div class="luxury-card p-12 rounded-[50px] border-white/5 flex flex-col items-center">
+                <h3 class="text-3xl font-black uppercase mb-4 text-white italic">Dubai <span class="gold-gradient-text">Network</span></h3>
+                <div class="relative w-full max-w-[350px] aspect-square flex items-center justify-center bg-black/40 rounded-full border border-white/10 overflow-hidden" onclick="activateWorld()">
+                    <canvas id="world-canvas" width="400" height="400"></canvas>
+                    <div id="world-status" class="absolute bottom-10 text-yellow-500 text-[8px] font-black tracking-[0.3em] uppercase opacity-50">Sistema: Activo</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-6 mb-32">
+            <div class="luxury-card rounded-[50px] overflow-hidden grid md:grid-cols-2 border border-white/5">
+                <div class="p-12">
+                    <h3 class="text-3xl font-black uppercase mb-4 text-white italic">Visítanos</h3>
+                    <p class="text-gray-400">Cl. 21 #5-26, Caucasia, Antioquia</p>
+                </div>
+                <div class="h-[400px]">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3941.594738495048!2d-75.19665682410884!3d7.989182392036151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e5ba138e68449c3%3A0x644c1f9642c8d88e!2sCl.%2021%20%235-26%2C%20Caucasia%2C%20Antioquia!5e0!3m2!1ses-419!2sco!4v1705270000000!5m2!1ses-419!2sco" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
     </div>
 
     <div id="product-modal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                <div id="modal-image-container" class="bg-black/20 rounded-3xl p-6"></div>
-                <div>
-                    <h2 id="modal-title" class="text-3xl font-black gold-gradient-text uppercase mb-4"></h2>
-                    <p id="modal-desc" class="text-gray-400 text-sm leading-relaxed mb-8 text-justify"></p>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3 text-yellow-500 font-bold text-xs uppercase tracking-widest">
-                            <i class="fas fa-check-circle"></i> Disponibilidad Inmediata
-                        </div>
-                        <button id="add-to-cart-btn" class="w-full bg-white text-black py-4 rounded-2xl font-black uppercase text-sm hover:bg-gray-200 transition-all mb-2">
-                            Añadir al Carrito <i class="fas fa-cart-plus ml-2"></i>
-                        </button>
-                        <button onclick="contactWhatsApp()" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-sm hover:bg-yellow-400 transition-all shadow-lg shadow-yellow-500/20">
-                            Comprar Ahora <i class="fab fa-whatsapp ml-2"></i>
-                        </button>
-                    </div>
-                </div>
+            <span class="close-modal" onclick="closeModal(event)">×</span>
+            
+            <div class="text-center mb-6">
+                 <h2 id="modal-title" class="text-3xl font-black text-white uppercase tracking-tight mb-2"></h2>
+                 <div class="w-20 h-1 bg-yellow-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div id="modal-body" class="text-gray-300 text-sm mb-8 text-justify leading-relaxed tracking-wide font-light"></div>
+
+            <div class="border-t border-white/10 pt-6">
+                <p class="text-center text-[10px] text-gray-500 uppercase tracking-widest mb-4">Disponible en tienda Caucasia</p>
+                <button id="modal-action-btn" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-sm hover:scale-105 transition-all shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2">
+                    <i class="fab fa-whatsapp text-lg"></i> Lo quiero comprar
+                </button>
             </div>
         </div>
     </div>
 
-    <div id="app" class="relative z-10">
-        <header class="pt-20 pb-10 text-center px-6">
-            <h1 class="text-6xl md:text-8xl gold-gradient-text py-4" style="font-family: 'Dancing Script', cursive;">Dubai Technology</h1>
-            <p class="text-gray-500 tracking-[0.8em] font-bold text-[10px] uppercase italic">The Luxury Standard</p>
-        </header>
-
-        <main id="products-grid" class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 pb-20"></main>
-    </div>
-
     <script>
         const INITIAL_PRODUCTS = [
-            { id: 102, name: "Samsung Galaxy A16", images: ["A16-5G-1.jpg", "650_1200 (3).jpeg", "6TC3NVTKMRFVVMAELJWUOMQZPI.avif"], desc: "Experimenta la velocidad del futuro con el Galaxy A16 5G. Pantalla de 6.7 pulgadas FHD+ Super AMOLED con colores vibrantes. Triple cámara de 50 MP para detalles profesionales y batería de 5000 mAh." },
-            { id: 103, name: "Samsung Galaxy A26", images: [], desc: "Potencia y estilo equilibrado. Procesador optimizado para juegos y multitarea fluida. Pantalla Infinity-O inmersiva y seguridad de grado militar con Samsung Knox." },
-            { id: 104, name: "Samsung Galaxy A36", images: [], desc: "Innovación premium con acabado en cristal y resistencia IP67. Pantalla de 120Hz para máxima fluidez y estabilización óptica (OIS) en video." }
+            { 
+                id: 102, 
+                name: "Samsung Galaxy A16", 
+                images: ["A16-5G-1.jpg", "650_1200 (3).jpeg", "6TC3NVTKMRFVVMAELJWUOMQZPI.avif"], 
+                desc: "Experimenta la velocidad del futuro con el Galaxy A16 5G. Equipado con una impresionante pantalla de 6.7 pulgadas FHD+ Super AMOLED que ofrece colores vibrantes y negros profundos. Su sistema de triple cámara de 50 MP captura cada detalle con claridad profesional. Batería de larga duración de 5000 mAh con carga rápida para mantenerte conectado todo el día en Caucasia. Diseño elegante y minimalista."
+            },
+            { 
+                id: 103, 
+                name: "Samsung Galaxy A26", 
+                images: [], 
+                desc: "El equilibrio perfecto entre potencia y estilo. El Galaxy A26 cuenta con un procesador optimizado para juegos y multitarea fluida. Su pantalla Infinity-O ofrece una experiencia inmersiva sin interrupciones. Disfruta de fotos nocturnas increíbles gracias a su modo Nightography mejorado. Seguridad de grado militar con Samsung Knox y desbloqueo por huella lateral. Ideal para el usuario exigente."
+            },
+            { 
+                id: 104, 
+                name: "Samsung Galaxy A36", 
+                images: [], 
+                desc: "Innovación en su máxima expresión. El Galaxy A36 redefine la gama media con su acabado premium en cristal y resistencia al agua y polvo IP67. Pantalla de 120Hz para una fluidez extrema en redes sociales y videos. Altavoces estéreo con Dolby Atmos que te envuelven en sonido. Cámara con estabilización óptica (OIS) para videos super estables mientras caminas por Caucasia. Una joya tecnológica."
+            },
+            { 
+                id: 105, 
+                name: "Samsung Galaxy A56", 
+                images: [], 
+                desc: "El rey de la serie A. Construcción en metal y vidrio Gorilla Glass Victus para máxima durabilidad. Potenciado por el procesador más avanzado de su clase para correr cualquier aplicación pesada. Carga ultra rápida de 45W. Sistema de cámaras profesional con IA integrada para mejorar cada foto automáticamente. Pantalla ultra brillante visible incluso bajo el sol fuerte del mediodía. Lo mejor de lo mejor en Dubai Technology."
+            }
         ];
-
-        let cart = [];
-        let selectedProduct = null;
 
         function renderProducts() {
             const grid = document.getElementById('products-grid');
+            const query = document.getElementById('search').value.toLowerCase();
             grid.innerHTML = '';
-            INITIAL_PRODUCTS.forEach(p => {
-                const mainImg = p.images.length > 0 ? p.images[0] : null;
-                const imgContent = mainImg 
-                    ? `<img src="${mainImg}" class="carousel-slide active">`
-                    : `<div class="h-full flex flex-col items-center justify-center text-yellow-500/50"><i class="fas fa-camera text-4xl mb-2"></i><span class="text-[8px] uppercase font-bold">Imágenes en WhatsApp</span></div>`;
+            
+            INITIAL_PRODUCTS.filter(p => p.name.toLowerCase().includes(query)).forEach(p => {
+                let imagesContent = '';
+                
+                if (p.images.length > 0) {
+                    let imagesHtml = '';
+                    p.images.forEach((img, index) => {
+                        imagesHtml += `<img src="${img}" class="carousel-slide ${index === 0 ? 'active' : ''}" id="img-${p.id}-${index}" onclick="nextImage(${p.id}, ${p.images.length})">`;
+                    });
+                    let dotsHtml = '';
+                    p.images.forEach((_, index) => {
+                        dotsHtml += `<div class="dot ${index === 0 ? 'active' : ''}" id="dot-${p.id}-${index}" onclick="setImage(${p.id}, ${index})"></div>`;
+                    });
+                    
+                    imagesContent = `
+                        <div class="carousel-container">
+                            ${imagesHtml}
+                        </div>
+                        <div class="carousel-dots">
+                            ${dotsHtml}
+                        </div>
+                    `;
+                } else {
+                    imagesContent = `
+                        <div class="carousel-container">
+                            <div class="no-image-box">
+                                <i class="fas fa-camera text-4xl text-yellow-500 mb-3 opacity-80"></i>
+                                <span class="text-[9px] uppercase tracking-widest text-white/50 font-bold">Imágenes Reales</span>
+                                <span class="text-[8px] uppercase tracking-widest text-yellow-500 font-bold mt-1">Disponibles en WhatsApp</span>
+                            </div>
+                        </div>
+                    `;
+                }
 
                 grid.innerHTML += `
-                <div class="luxury-card p-8" onclick="openModal(${p.id})">
-                    <div class="carousel-container mb-6">${imgContent}</div>
-                    <h3 class="font-black uppercase text-white mb-4 text-xl text-center">${p.name}</h3>
-                    <button class="w-full bg-transparent border border-yellow-500/50 text-yellow-500 py-3 rounded-2xl font-black uppercase text-[9px] hover:bg-yellow-500 hover:text-black transition-all">Detalles VIP</button>
+                <div class="luxury-card p-8 flex flex-col text-left">
+                    ${imagesContent}
+                    <h3 class="font-black uppercase text-white mb-2 text-xl text-center tracking-tighter">${p.name}</h3>
+                    <div class="specs-text-card">
+                        <p>${p.desc}</p>
+                    </div>
+                    <span class="text-[9px] text-yellow-500 font-bold uppercase tracking-widest text-center mb-4 block animate-pulse">Disponibilidad Inmediata</span>
+                    
+                    <button onclick="openDetails(${p.id})" class="w-full bg-transparent border border-yellow-500 text-yellow-500 py-4 rounded-2xl font-black uppercase text-[10px] hover:bg-yellow-500 hover:text-black transition-all shadow-lg shadow-yellow-500/10">
+                        <i class="fas fa-plus mr-2"></i> Ver Información
+                    </button>
                 </div>`;
             });
         }
 
-        function openModal(id) {
-            selectedProduct = INITIAL_PRODUCTS.find(item => item.id === id);
-            document.getElementById('modal-title').innerText = selectedProduct.name;
-            document.getElementById('modal-desc').innerText = selectedProduct.desc;
-            const imgContainer = document.getElementById('modal-image-container');
-            imgContainer.innerHTML = selectedProduct.images.length > 0 
-                ? `<img src="${selectedProduct.images[0]}" class="w-full h-auto rounded-2xl shadow-2xl">`
-                : `<div class="h-64 flex items-center justify-center text-yellow-500"><i class="fas fa-image text-6xl opacity-20"></i></div>`;
-            
-            document.getElementById('add-to-cart-btn').onclick = () => addToCart(selectedProduct);
+        function openDetails(productId) {
+            const product = INITIAL_PRODUCTS.find(p => p.id === productId);
+            if (!product) return;
+            document.getElementById('modal-title').innerText = product.name;
+            document.getElementById('modal-body').innerText = product.desc;
+            const btn = document.getElementById('modal-action-btn');
+            btn.onclick = function() { contactVIP(product.name); };
             document.getElementById('product-modal').style.display = 'flex';
         }
 
-        function closeModal() { document.getElementById('product-modal').style.display = 'none'; }
-
-        /* LÓGICA DEL CARRITO */
-        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('open'); }
-
-        function addToCart(product) {
-            cart.push(product);
-            updateCartUI();
-            closeModal();
-            if(!document.getElementById('cart-sidebar').classList.contains('open')) toggleCart();
+        function closeModal(event) {
+            document.getElementById('product-modal').style.display = 'none';
         }
 
-        function updateCartUI() {
-            const count = document.getElementById('cart-count');
-            const container = document.getElementById('cart-items-container');
-            const emptyMsg = document.getElementById('empty-cart-msg');
-            
-            count.innerText = cart.length;
-            container.innerHTML = '';
-            
-            if(cart.length === 0) {
-                emptyMsg.style.display = 'block';
-            } else {
-                emptyMsg.style.display = 'none';
-                cart.forEach((item, index) => {
-                    container.innerHTML += `
-                        <div class="cart-item">
-                            <span class="text-[10px] font-bold uppercase tracking-widest">${item.name}</span>
-                            <i onclick="removeItem(${index})" class="fas fa-trash-alt text-red-500 cursor-pointer text-xs"></i>
-                        </div>`;
-                });
+        let currentIndices = {};
+        function nextImage(productId, totalImages) {
+            if (!currentIndices[productId]) currentIndices[productId] = 0;
+            currentIndices[productId] = (currentIndices[productId] + 1) % totalImages;
+            updateCarousel(productId, currentIndices[productId]);
+        }
+
+        function setImage(productId, index) {
+            currentIndices[productId] = index;
+            updateCarousel(productId, index);
+        }
+
+        function updateCarousel(productId, index) {
+            const slides = document.querySelectorAll(`[id^="img-${productId}-"]`);
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(`img-${productId}-${index}`).classList.add('active');
+            const dots = document.querySelectorAll(`[id^="dot-${productId}-"]`);
+            if(dots.length > 0) {
+                dots.forEach(dot => dot.classList.remove('active'));
+                document.getElementById(`dot-${productId}-${index}`).classList.add('active');
             }
         }
 
-        function removeItem(index) {
-            cart.splice(index, 1);
-            updateCartUI();
+        function contactVIP(productName) {
+            const message = `Hola Dubai Technology! Me gustaría ver fotos reales del ${productName} y conocer su precio.`;
+            window.open(`https://wa.me/573218072979?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        function checkoutWhatsApp() {
-            if(cart.length === 0) return alert("El carrito está vacío");
-            const items = cart.map(i => i.name).join(", ");
-            const msg = `¡Hola Dubai Technology! Me gustaría pedir los siguientes equipos VIP: ${items}. Quedo atento a la confirmación.`;
-            window.open(`https://wa.me/573218072979?text=${encodeURIComponent(msg)}`, '_blank');
+        function startSaleNotifications() {
+            const users = ["Andrés", "Valentina", "Sebastián", "Carolina", "Mateo"];
+            setInterval(() => {
+                const notif = document.getElementById('sale-notification');
+                document.getElementById('sale-text').innerText = `${users[Math.floor(Math.random()*users.length)]} reservó un equipo VIP`;
+                notif.classList.add('show');
+                setTimeout(() => notif.classList.remove('show'), 4000);
+            }, 10000);
         }
 
-        function contactWhatsApp() {
-            const msg = `Hola Dubai Technology! Estoy interesado en el ${selectedProduct.name}. ¿Me envían más información?`;
-            window.open(`https://wa.me/573218072979?text=${encodeURIComponent(msg)}`, '_blank');
+        function postReview() {
+            const name = document.getElementById('rev-name').value, text = document.getElementById('rev-text').value;
+            if(!name || !text) return;
+            const reviews = JSON.parse(localStorage.getItem('dubai_reviews') || '[]');
+            reviews.unshift({ name, text }); localStorage.setItem('dubai_reviews', JSON.stringify(reviews));
+            location.reload();
         }
 
-        window.onload = renderProducts;
+        function loadSavedReviews() {
+            const container = document.getElementById('reviews-container');
+            const reviews = JSON.parse(localStorage.getItem('dubai_reviews') || '[]');
+            reviews.forEach(r => { container.innerHTML += `<div class="luxury-card p-8 rounded-3xl border-white/5"><div class="flex text-yellow-500 mb-4 text-[10px]"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="text-white/80 text-xs italic mb-6">"${r.text}"</p><span class="text-[10px] font-black text-white/50 uppercase">${r.name} - Cliente VIP</span></div>`; });
+        }
+
+        function initParticles() {
+            const can = document.getElementById('particle-canvas'), c = can.getContext('2d');
+            can.width = window.innerWidth; can.height = window.innerHeight;
+            let dots = []; for(let i=0; i<30; i++) dots.push({ x: Math.random()*can.width, y: Math.random()*can.height, s: Math.random()*1.5, sp: Math.random()*0.15, o: Math.random()*0.3 });
+            function loop() { c.clearRect(0,0,can.width, can.height); dots.forEach(d => { d.y -= d.sp; if(d.y<0) d.y=can.height; c.fillStyle=`rgba(255,215,0,${d.o})`; c.beginPath(); c.arc(d.x, d.y, d.s, 0, Math.PI*2); c.fill(); }); requestAnimationFrame(loop); } loop();
+        }
+
+        const worldCanvas = document.getElementById('world-canvas');
+        const wCtx = worldCanvas.getContext('2d');
+        let worldParticles = [], isActivated = false;
+        class WorldParticle { constructor() { this.reset(); } reset() { this.x = Math.random() * 400; this.y = Math.random() * 400; this.vx = (Math.random() - 0.5) * 1; this.vy = (Math.random() - 0.5) * 1; } update() { this.x += this.vx * (isActivated ? 5 : 1); this.y += this.vy * (isActivated ? 5 : 1); if(this.x < 0 || this.x > 400) this.vx *= -1; if(this.y < 0 || this.y > 400) this.vy *= -1; } }
+        for(let i=0; i<40; i++) worldParticles.push(new WorldParticle());
+        function drawWorld() { wCtx.clearRect(0,0,400,400); worldParticles.forEach((p, i) => { p.update(); wCtx.fillStyle = isActivated ? '#FFD700' : 'rgba(255,215,0,0.3)'; wCtx.beginPath(); wCtx.arc(p.x, p.y, 2, 0, Math.PI*2); wCtx.fill(); worldParticles.forEach((p2, j) => { if(i === j) return; let dist = Math.hypot(p.x - p2.x, p.y - p2.y); if(dist < 80) { wCtx.strokeStyle = `rgba(255,215,0,${(1 - dist/80) * (isActivated ? 0.5 : 0.1)})`; wCtx.beginPath(); wCtx.moveTo(p.x, p.y); wCtx.lineTo(p2.x, p2.y); wCtx.stroke(); } }); }); requestAnimationFrame(drawWorld); }
+        function activateWorld() { isActivated = true; setTimeout(() => { isActivated = false; }, 3000); }
+
+        window.onload = () => { renderProducts(); startSaleNotifications(); loadSavedReviews(); initParticles(); drawWorld(); };
     </script>
 </body>
 </html>
